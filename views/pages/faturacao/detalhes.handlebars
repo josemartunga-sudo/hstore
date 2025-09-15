@@ -1,0 +1,53 @@
+{{>header}}
+<main class="main-page main-page-detalhe">
+    <section class="main-page-detalhes">
+        <section class="main-page-detalhes-cabecalho">
+            <aside>
+                <i class="fas fa-circle-info fa-lg" style="color: #4B1E78;"></i>
+                <h2>Detalhes da faturação</h2>
+            </aside>
+
+            <div class="main-page-detalhes-cabecalho-menu">
+                <i class="fas fa-ellipsis-v"></i>
+                <ul class="main-page-detalhes-cabecalho-menu-escondido">
+                    <li>
+                        <i class="fas fa-edit" style="color: #4B1E78;"></i>
+                        <a href="/faturacao/editar/{{faturacao.id_facturacao}}"> Editar</a>
+                    </li>
+                    <form class="formDeleteFacturacao">
+                        <i class="fas fa-trash" style="color: #dd080f;"></i>
+                        <input style="display: none;" type="text" name="id_facturacao" id="id_facturacao"
+                            value="{{faturacao.id_facturacao}}">
+                        <button type="submit"> Excluir</button>
+                    </form>
+                </ul>
+            </div>
+        </section>
+
+        <div class="main-page-detalhes-hero">
+            <h2 class="cash">+{{getMoeda faturacao.valor}}</h2>
+        </div>
+
+        <div class="main-page-detalhes-detalhes">
+            <p class="designacao">ID Faturação</p>
+            <p class="valor" id="faturacao-id">{{faturacao.id_facturacao}}</p>
+
+            <p class="designacao">Sub-agente</p>
+            <p class="valor"><a href="/agentes/perfil/{{faturacao.agente_id}}"
+                    class="link">{{faturacao.agente.nome}}</a>
+            </p>
+
+            <p class="designacao">Funcionário</p>
+            <p class="valor">{{usuario.nome}}</p>
+
+            <p class="designacao">Data de cadastro</p>
+            <p class="valor">{{faturacao.data_faturacao}}</p>
+
+            <p class="designacao">Tipo de Faturação</p>
+            <p class="valor">{{faturacao.tipo_faturacao}}</p>
+
+            <p class="designacao">Forma de Pagamento</p>
+            <p class="valor">{{faturacao.forma_pagamento}}</p>
+        </div>
+    </section>
+</main>

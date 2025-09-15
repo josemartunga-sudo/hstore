@@ -1,0 +1,84 @@
+{{>header}}
+<main class="main-page">
+    <div class="main-page-cabeca">
+        <section class="main-page-hero">
+            <form class="main-page-hero-form main-page-hero-form-relatorio">
+                <div class="main-page-hero-form-busca">
+                    <input class="main-page-hero-form-busca-campo" type="month" name="data-pagamento"
+                        id="data-pagamento" min="2016-01" max="2050-01-01" value="{{relatorioFinal.data}}">
+                    <i class="fas fa-calendar-alt fa-1x" style="color: #F7941E;"></i>
+                </div>
+                <select name="parcela" id="parcela">
+                    {{#if (eq relatorioFinal.forma_pagamento "Quinzenal")}}
+
+                    {{#if (eq relatorioFinal.parcela "Segunda")}}
+                    <option value="Primeira">Primeira</option>
+                    <option selected value="Segunda">Segunda</option>
+                    {{else}}
+                    <option selected value="Primeira">Primeira</option>
+                    <option value="Segunda">Segunda</option>
+                    {{/if}}
+
+                    {{else}}
+                    <option selected value="Única">Única</option>
+                    {{/if}}
+                </select>
+            </form>
+            <div class="main-page-titulo">
+                <h2>Resumo mensal do/a Sub-agente <br> <a href="/agentes/perfil/{{relatorioFinal.agente.id_agente}}" class="link">{{relatorioFinal.agente.nome}}</a></h2>
+            </div>
+        </section>
+        <section class="main-page-cards">
+            <div class="main-page-cards-card">
+                <aside>
+                    <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
+                    <p>Total Comprado</p>
+                    <h3>{{getMoeda relatorioFinal.totalComprado}}</h3>
+                </aside>
+            </div>
+            <div class="main-page-cards-card">
+                <aside>
+                    <i class="fas fa-check-circle fa-2x" style="color: #F7941E;"></i>
+                    <p>Faturações Efetuadas</p>
+                    <h3>{{relatorioFinal.comprasEfetuadas}}</h3>
+                </aside>
+            </div>
+            <div class="main-page-cards-card">
+                <aside>
+                    <i class="fas fa-gift fa-2x" style="color: #F7941E;"></i>
+                    <p>Caixinhas</p>
+                    <h3> {{relatorioFinal.caixas}} </h3>
+                </aside>
+            </div>
+            <div class="main-page-cards-card">
+                <aside>
+                    <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
+                    <p>Bonus</p>
+                    <h3> {{getMoeda relatorioFinal.bonus}} </h3>
+                </aside>
+            </div>
+            <div class="main-page-cards-card expancivel">
+                <aside>
+                    <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
+                    <p>Forma de Pagamento</p>
+                    {{#if relatorioFinal.forma_pagamento }}
+                    <h3> {{relatorioFinal.forma_pagamento}} </h3>
+                    {{else}}
+                    <h3>Sem Faturações</h3>
+                    {{/if}}
+                </aside>
+            </div>
+        </section>
+        
+        <div class="form-pagar">
+            <form>
+                <input type="number" name="id_agente" id="id_agente" value="{{relatorioFinal.agente.id_agente}}">
+                <input class="main-page-hero-form-busca-campo" type="month" name="data_relatorio" id="data-relatorio"
+                    value="{{relatorioFinal.data}}">
+                <input type="text" name="parcela" id="parcela" value="{{relatorioFinal.parcela}}">
+                <button>Registrar Pagamento</button>
+            </form>
+        </div>
+        
+    </div>
+</main>

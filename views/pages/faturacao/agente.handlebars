@@ -1,0 +1,48 @@
+{{>header}}
+<main class="main-page">
+    <div class="main-page-cabeca">
+        <section class="main-page-hero">
+            <form class="main-page-hero-form">
+                <div class="main-page-hero-form-busca">
+                    <input class="main-page-hero-form-busca-campo" type="month" name="data-relatorio"
+                        id="data-relatorio" min="2016-01" max="2050-01" value="{{resumoMensalDoAgente.data}}">
+                    <i class="fas fa-calendar-alt fa-1x" style="color: #F7941E;"></i>
+                    </i>
+                </div>
+            </form>
+            <div class="main-page-titulo">
+            </div>
+        </section>
+        <section class="main-page-cards">
+            <div class="main-page-cards-card">
+                <aside>
+                    <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
+                    <p>Total Comprado</p>
+                    <h3>{{getMoeda resumoMensalDoAgente.totalComprado}}</h3>
+                </aside>
+            </div>
+            <div class="main-page-cards-card">
+                <aside>
+                    <i class="fas fa-check-circle fa-2x" style="color: #F7941E;"></i>
+                    <p>Faturações Efetuadas</p>
+                    <h3>{{resumoMensalDoAgente.comprasEfetuadas}}</h3>
+                </aside>
+            </div>
+        </section>
+        <h2 class="main-page-lista-cabeçalho">
+            Faturações do {{agente.nome}}
+            <a href="/faturacao/cadastrar/{{agente.id_agente}}" class="btn-plus">+</a>
+        </h2>
+    </div>
+    <section class="main-page-faturacoes">
+        {{#if successo}}
+        {{#each faturacoes}}
+        {{>faturacao}}
+        {{/each}}
+        {{else}}
+        <div class="main-page-faturacoes-faturacao">
+            <p class="nome">Nenhuma faturação do sub-agente!</p>
+        </div>
+        {{/if}}
+    </section>
+</main>

@@ -1,0 +1,189 @@
+:root {
+    --white: hsl(0, 0%, 100%);
+    --gray: #F0F0F0;
+    --grayLight: #666666;
+    --laranja: #F7941E;
+    --roxoProfundo: #1A0033;
+    --roxo: #4B1E78;
+    --roxoLight: #2a0a5ecb;
+    --black: #1a1a1a;
+}
+
+
+
+header {
+    background-color: var(--roxo);
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    width: 250px;
+
+    transition: left .3s;
+
+    .menu-hero {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        padding: 14px;
+        height: 30vh;
+
+        .menu-hero-logo {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h1 a,
+            p {
+                color: var(--laranja);
+            }
+        }
+    }
+
+    .menu-navegacao {
+        background-color: var(--laranja);
+        height: 70vh;
+        padding: 10px 0px;
+
+        .menu-navegacao-items {
+            display: flex;
+            flex-flow: column;
+            gap: 8px;
+
+            .menu-navegacao-items-item {
+                overflow: hidden;
+
+                .menu-navegacao-items-item-titulo {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding-left: 10px;
+                    gap: 8px;
+
+                    span {
+                        cursor: pointer;
+                        display: inline-block;
+                        border-radius: 5px;
+                        padding: 10px;
+                        width: 100%;
+                        color: var(--roxoProfundo);
+                        font-weight: 400;
+                        font-size: 1em;
+
+                        transition: all .2s;
+
+                        a {
+                            display: inline-block;
+                            width: 100%;
+                            color: var(--roxoProfundo);
+                        }
+                    }
+                }
+
+                .menu-navegacao-items-item-titulo:hover {
+                    background-color: #f0f0f033;
+                }
+
+                #logo {
+                    background-color: black;
+                    display: inline-block;
+                    padding: 2px;
+                    width: 24px;
+                    height: 20px;
+                    text-align: center;
+                    
+                    border-radius: 50%;
+
+                    color: var(--laranja);
+                    font-weight: 400;
+                    font-size: 1em;
+                }
+                #nome{
+                    padding-left: 0;
+                }
+
+                a {
+                    display: inline-block;
+                    padding: 4px;
+                    width: 100%;
+                    font-weight: 300;
+                }
+
+                a:hover {
+                    color: var(--grayLight);
+                }
+
+                .menu-navegacao-items-item-sub {
+                    position: relative;
+
+                    height: 0px;
+                    transition: .2s;
+                    transition-delay: .2s;
+
+                    li {
+                        padding: 6px 0px;
+                        margin-top: .5px;
+                        padding-left: 40px;
+                    }
+                }
+
+                .menu-navegacao-items-item-sub-visivel {
+                    height: 80px;
+                }
+            }
+        }
+    }
+}
+
+.conteiner-menu-hero-btn {
+    background-color: transparent;
+    padding: 20px 15px;
+    padding-bottom: 0;
+    position: fixed;
+    top: 0;
+    z-index: 4;
+
+    .menu-hero-btn {
+        background-color: transparent;
+        border: none;
+        display: none;
+        cursor: pointer;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    header {
+        position: fixed;
+        z-index: 5;
+        left: -250px;
+
+        .menu-hero {
+            flex-flow: row;
+            justify-content: space-between;
+            align-items: center;
+
+            .menu-hero-logo {
+                h1 {
+                    font-size: 1.8em;
+                }
+            }
+        }
+
+        .menu-navegacao {
+            height: 86vh;
+            width: 250px;
+
+            transition: .3s;
+            position: relative;
+        }
+    }
+
+    .menu-visivel {
+        left: 0;
+    }
+
+    .conteiner-menu-hero-btn {
+        .menu-hero-btn {
+            display: block;
+        }
+    }
+}

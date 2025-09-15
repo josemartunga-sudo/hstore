@@ -1,0 +1,57 @@
+{{#if alerta.msg}}
+<div class="modal modal-alertas">
+    {{alerta.msg}}
+    <a href="/">Voltar</a>
+</div>
+{{else}}
+<main class="main-page">
+    <div class="main-page-cabeca">
+        <section class="main-page-hero">
+            <form class="main-page-hero-form">
+                <div class="main-page-hero-form-busca">
+                    <i class="fas fa-search fa-1x" style="color: #F7941E;">
+                    </i>
+                    <input class="main-page-hero-form-busca-campo" type="search" name="busca" id="busca-agente"
+                        placeholder="Pesquisar sub-agentes..." autocomplete="off">
+                    <div class="main-page-hero-resultado"></div>
+                </div>
+                <div class="modal modal-busca"></div>
+            </form>
+            <div class="main-page-titulo">
+                <h2>Resumo Diário</h2>
+            </div>
+        </section>
+        <section class="main-page-cards">
+            <a href="/agentes" class="main-page-cards-card">
+                <i class="fas fa-users fa-2x" style="color: #F7941E;"></i>
+                <p>Sub-agentes</p>
+                <h3> {{resumoDiario.totalAgentes}}</h3>
+            </a>
+            <a href="/faturacao" class="main-page-cards-card">
+                <i class="fas fa-check-circle fa-2x" style="color: #F7941E;"></i>
+                <p>Faturações</p>
+                <h3> {{resumoDiario.numeroDeVendas}}</h3>
+            </a>
+            <div class="main-page-cards-card expancivel">
+                <aside>
+                    <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
+                    <p>Total Vendido</p>
+                    <h3> {{getMoeda resumoDiario.totalVendido}}</h3>
+                </aside>
+            </div>
+        </section>
+        <h2 class="titulo-seccao">Últimas Faturações</h2>
+    </div>
+    <section class="main-page-faturacoes">
+        {{#if successo}}
+        {{#each faturacoes}}
+        {{>faturacao}}
+        {{/each}}
+        {{else}}
+        <div class="main-page-faturacoes-faturacao">
+            <p class="nome">Nenhuma faturação!</p>
+        </div>
+        {{/if}}
+    </section>
+</main>
+{{/if}}

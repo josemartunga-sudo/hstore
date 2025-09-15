@@ -1,0 +1,32 @@
+{{>header}}
+<main class="main-page main-form">
+    <section class="main-page-form">
+        <h2>Faturação</h2>
+        <form class="main-page-form-cadastro-faturacao">
+            <div class="main-page-form-campo">
+                Para o/a Sub-agente: {{agente.nome}}
+            </div>
+            
+            <input type="number" value="{{agente.id_agente}}" name="agente_id" id="agente_id" placeholder="ID do agente"
+                required autocomplete="off" style="display: none;">
+
+            <input type="number" name="valor_electronico" id="valor_electronico" placeholder="Valor do saldo electronico">
+
+             <input type="number" name="valor_fisico" id="valor_fisico" placeholder="Valor do saldo físico">
+
+            
+            <select name="forma_pagamento" id="forma_pagamento">
+                {{#if (eq forma_pagamento "Mensal")}}
+                <option value="Mensal">Mensal</option>
+                {{else if (eq forma_pagamento "Quinzenal")}}
+                <option value="Quinzenal">Quinzenal</option>
+                {{else}}
+                <option selected disabled>Forma Pagamento...</option>
+                <option value="Mensal">Mensal</option>
+                <option value="Quinzenal">Quinzenal</option>
+                {{/if}}
+            </select>
+            <button type="submit">Cadastrar</button>
+        </form>
+    </section>
+</main>

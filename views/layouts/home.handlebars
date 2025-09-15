@@ -1,0 +1,40 @@
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="../../icones/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../../styles/styles.css" />
+  <link rel="stylesheet" href="../../styles/header.css" />
+  <link rel="stylesheet" href="../../styles/main.css" />
+  <link rel="stylesheet" href="../../styles/detalhes.css" />
+  <link rel="stylesheet" href="../../styles/form.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <title>
+    {{#if titulo}}
+    {{titulo}}
+    {{else}}
+    H-Store
+    {{/if}}
+  </title>
+</head>
+
+  <body>
+    <div id="loaderContainer">
+      <span id="loader">
+      </span>
+    </div>
+    {{{body}}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+  <script src="../../scripts/script.js"></script>
+  <script src="../../scripts/fetchPost.js"></script>
+  <script src="../../scripts/fetchPUT.js"></script>
+  <script src="../../scripts/fetchDELETE.js"></script>
+  <script src="../../scripts/header.js"></script>
+  <script src="../../scripts/busca.js"></script>
+</body>
+
+</html>

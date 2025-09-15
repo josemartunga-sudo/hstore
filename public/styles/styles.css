@@ -1,0 +1,148 @@
+:root {
+  --white: hsl(0, 0%, 100%);
+  --gray: #f0f0f0;
+  --grayLight: #666666;
+  --laranja: #f7941e;
+  --roxoProfundo: #1a0033;
+  --roxo: #2a0a5e;
+  --roxoLight: #2a0a5ecb;
+  --black: #1a1a1a;
+}
+
+@keyframes rotation {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: var(--black);
+  text-decoration: none;
+  list-style: none;
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background-color: var(--gray);
+  overflow-x: hidden;
+
+  #loaderContainer {
+    position: fixed;
+    inset: 0;
+    /* top: 0; right: 0; bottom: 0; left: 0; */
+    background: rgba(0, 0, 0, 0.5);
+    /* fundo escuro semitransparente */
+    /* começa escondido */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* fica acima de tudo */
+
+    span#loader {
+      width: 48px;
+      height: 48px;
+      border: 8px solid #fff;
+      border-bottom-color: var(--roxoLight);
+      border-radius: 50%;
+      animation: rotation 1s linear infinite;
+    }
+  }
+
+    .modal {
+        background: #00000080;
+        box-shadow: 0 10px 30px #00000033;
+        height: 100vh;
+        width: 100vw;
+        padding-right: 70px;
+        display: flex;
+        flex-flow: column;
+        gap: 10px;
+        justify-content: center;
+        align-items: flex-end;
+        color: var(--white);
+
+    position: absolute;
+    cursor: pointer;
+
+    opacity: 0;
+    top: 0;
+    right: 100vw;
+    z-index: 1;
+    transition: opacity 0.4s ease-out;
+
+    a {
+      color: var(--white);
+      text-decoration: underline;
+    }
+  }
+
+  .modal-menu-visivel {
+    opacity: 1;
+    right: 0;
+  }
+
+  .modal-busca-visivel {
+    opacity: 1;
+    right: -10px;
+  }
+
+  .modal-alertas {
+    opacity: 1;
+    right: 0px;
+  }
+
+  .link {
+    text-decoration: underline;
+  }
+
+  .modal-alertas {
+    opacity: 1;
+    left: 0;
+  }
+
+  .link {
+    text-decoration: underline 1px;
+    text-decoration-thickness: 0.5px;
+  }
+}
+
+.graficoContainer {
+  margin: 24px auto;
+  padding: 32px;
+  max-width: 100%;
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+ 
+  overflow: hidden;
+}
+
+
+
+
+
+@media screen and (max-width: 670px) {
+  body {
+    .modal {
+      width: 100vw;
+      padding: 20px;
+      text-align: center;
+      justify-content: center;
+      color: var(--white);
+    }
+  }
+}

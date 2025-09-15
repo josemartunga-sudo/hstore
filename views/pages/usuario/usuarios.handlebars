@@ -1,0 +1,37 @@
+{{>header}}
+
+<main class="main-page">
+    <div class="main-page-cabeca">
+        <section class="main-page-hero">
+            <form class="main-page-hero-form">
+                <div class="main-page-hero-form-busca">
+                    <i class="fas fa-search fa-1x" style="color: #F7941E;"></i>
+                    <input class="main-page-hero-form-busca-campo" type="search" name="busca" id="busca-usuario"
+                        placeholder="Pesquisar usuarios..." autocomplete="off">
+                    <div class="main-page-hero-resultado"></div>
+                </div>
+                <div class="modal modal-busca"></div>
+            </form>
+            <div class="main-page-hero-resultado"></div>
+        </section>
+        <h2 class="main-page-lista-cabeçalho">Usuarios cadastrados
+            <a href="/usuarios/cadastrar" class="btn-plus">+</a>
+        </h2>
+    </div>
+    <section class="main-page-lista">
+        {{#if msg}}
+        <div class="main-page-lista-item">
+            <p class="nome">{{msg}}</p>
+        </div>
+        {{else}}
+        {{#each usuarios}}
+        <a href="/usuarios/perfil/{{this.id_usuario}}">
+            <div class="main-page-lista-item">
+                <p class="nome">{{this.nome}}</p>
+                <h3>{{this.id_usuario}}</h3>
+            </div>
+        </a>
+        {{/each}}
+        {{/if}}
+    </section>
+</main>

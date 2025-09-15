@@ -1,0 +1,62 @@
+{{>header}}
+<main class="main-page main-page-detalhe">
+    <section class="main-page-detalhes">
+        <section class="main-page-detalhes-cabecalho">
+            <aside>
+                <i class="fas fa-user-circle fa-lg" style="color: #4B1E78;"></i>
+                <h2>Perfil do sub-agente</h2>
+            </aside>
+
+            <div class="main-page-detalhes-cabecalho-menu">
+                <i class="fas fa-ellipsis-v"></i>
+                <ul class="main-page-detalhes-cabecalho-menu-escondido">
+                    <li>
+                        <i class="fas fa-edit" style="color: #4B1E78;"></i>
+                        <a href="/agentes/editar/{{agente.id_agente}}"> Editar perfil</a>
+                    </li>
+                    <form class="formDeleteAgente">
+                        <i class="fas fa-trash" style="color: #dd080f;"></i>
+                        <input style="display: none;" type="text" name="id_agente" id="id_agente" value="{{agente.id_agente}}">
+                        <button type="submit"> Excluir perfil</button>
+                    </form>
+                </ul>
+            </div>
+        </section>
+
+        <div class="main-page-detalhes-hero">
+            <span class="main-page-avatar">{{logo}}</span>
+            <h3>{{agente.nome}}</h3>
+        </div>
+
+        <div class="main-page-detalhes-detalhes">
+            <p class="designacao">ID</p>
+            <p class="valor" id="agente-id">{{agente.id_agente}}</p>
+
+            <p class="designacao">Telefone</p>
+            <p class="valor">{{agente.telefone}}</p>
+
+            <p class="designacao">Data cadastro</p>
+            <p class="valor">{{agente.data_criacao}}</p>
+
+            <p class="designacao">Cadastrado por</p>
+            <p class="valor">{{agente.usuario.nome}}</p>
+        </div>
+
+        <div class="main-page-detalhes-botoes">
+            <button>
+                <i class="fas fa-plus-circle"></i>
+                <a href="/faturacao/cadastrar/{{agente.id_agente}}">Nova Faturação</a>
+            </button>
+
+            <button>
+                <i class="fas fa-chart-bar"></i>
+                <a href="/agentes/relatorio/{{agente.id_agente}}">Relatório Mensal</a>
+            </button>
+
+            <button>
+                <i class="fas fa-history"></i>
+                <a href="/agentes/faturacoes/{{agente.id_agente}}">Ver Historico</a>
+            </button>
+        </div>
+    </section>
+</main>

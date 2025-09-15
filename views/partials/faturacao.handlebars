@@ -1,0 +1,10 @@
+<a href="/faturacao/{{this.id_facturacao}}">
+    <div class="main-page-faturacoes-faturacao">
+        <p class="nome"> {{this.agente.nome}} </p>
+        <h3 class="cash"> <span id="plus">+ </span>{{ getMoeda this.valor}} </h3>
+        <p> 
+            <i class="fas fa-calendar-day fa-sm" style="color: #666666e0;"></i>
+            {{this.data_faturacao}}
+        </p>
+    </div>
+</a>

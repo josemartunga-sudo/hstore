@@ -1,0 +1,15 @@
+{{>header}}
+<main class="main-page main-form">
+    <section class="main-page-form">
+        <h2>Editar Sub-agente</h2>
+        <form class="main-page-form-edit-agente">
+            <input type="number" name="id_agente" id="id_agente" placeholder="ID do sub-agente" value="{{agente.id_agente}}" style="display: none;" required>
+            
+            <input type="text" name="nome" id="nome" placeholder="Nome do sub-agente" value="{{agente.nome}}" required>
+            
+            <input type="number" name="telefone" id="telefone" placeholder="Telefone do sub-agente" value="{{agente.telefone}}" required>
+            
+            <button type="submit">Atualizar</button>
+        </form>
+    </section>
+</main>

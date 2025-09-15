@@ -1,0 +1,45 @@
+{{>header}}
+<main class="main-page main-page-detalhe">
+    <section class="main-page-detalhes">
+        <section class="main-page-detalhes-cabecalho">
+            <aside>
+                <i class="fas fa-user-circle fa-lg" style="color: #4B1E78;"></i>
+                <h2>Perfil do Usuario</h2>
+            </aside>
+
+            <div class="main-page-detalhes-cabecalho-menu">
+                <i class="fas fa-ellipsis-v"></i>
+                <ul class="main-page-detalhes-cabecalho-menu-escondido">
+                    <li>
+                        <i class="fas fa-edit" style="color: #4B1E78;"></i>
+                        <a href="/usuarios/editar/{{usuario.id_usuario}}">Editar perfil</a>
+                    </li>
+                    <form class="formDeleteUsuario">
+                        <i class="fas fa-trash" style="color: #dd080f;"></i>
+                        <input style="display: none;" type="text" name="id_usuario" id="id_usuario" value="{{usuario.id_usuario}}">
+                        <button type="submit">Excluir perfil</button>
+                    </form>
+                </ul>
+            </div>
+        </section>
+
+        <div class="main-page-detalhes-hero">
+            <span class="main-page-avatar">{{logo}}</span>
+            <h3>{{usuario.nome}}</h3>
+        </div>
+
+        <div class="main-page-detalhes-detalhes">
+            <p class="designacao">ID</p>
+            <p class="valor" id="usuario-id">{{usuario.id_usuario}}</p>
+
+            <p class="designacao">Telefone</p>
+            <p class="valor">{{usuario.telefone}}</p>
+
+            <p class="designacao">Permissões</p>
+            <p class="valor">{{usuario.tipo}}</p>
+
+            <p class="designacao">Data cadastro</p>
+            <p class="valor">{{usuario.data_criacao}}</p>
+        </div>
+    </section>
+</main>

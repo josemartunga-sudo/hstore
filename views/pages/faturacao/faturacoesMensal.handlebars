@@ -1,0 +1,34 @@
+{{>header}}
+<main class="main-page">
+    <div class="main-page-cabeca">
+        <section class="main-page-hero">
+            <form class="main-page-hero-form">
+                <div class="main-page-hero-form-busca">
+                    <input class="main-page-hero-form-busca-campo" type="month" name="data-relatorio"
+                        id="data-relatorio" min="2016-01" max="2049-12" value="{{resumoMensal.data}}">
+                    <i class="fas fa-calendar-alt fa-1x" style="color: #F7941E;"></i>
+                </div>
+            </form>
+        </section>
+        <h2 class="main-page-lista-cabeçalho">Faturações do mês
+            <a class="btn-plus numero-total">{{resumoMensal.totalFaturacoes}}</a>
+        </h2>
+    </div>
+    <section class="main-page-lista">
+        {{#if resumoMensal.listaFaturacoes}}
+        {{#each resumoMensal.listaFaturacoes}}
+        <a href="/agentes/relatorio/{{this.agente_id}}?data={{../resumoMensal.data}}">
+            <div class="main-page-faturacoes-faturacao">
+                <p class="nome"> {{this.agente.nome}} </p>
+                <h3 class="cash-pendente"> {{this.Total}} </h3>
+                <p> {{this.forma_pagamento}} </p>
+            </div>
+        </a>
+        {{/each}}
+        {{else}}
+        <div class="main-page-faturacoes-faturacao">
+            <p class="nome">Nenhuma faturação!</p>
+        </div>
+        {{/if}}
+    </section>
+</main>

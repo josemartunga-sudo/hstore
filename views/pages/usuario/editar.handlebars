@@ -1,0 +1,19 @@
+{{>header}}
+<main class="main-page main-form">
+    <section class="main-page-form">
+        <h2>Editar Usuario</h2>
+        <form class="main-page-form-edit-usuario">
+            <input type="number" name="id_usuario" id="id_usuario" placeholder="id_usuario" value="{{usuario.id_usuario}}" style="display: none;" required>
+
+            <input type="text" name="nome" id="nome" placeholder="Nome usuario" value="{{usuario.nome}}" required>
+
+            {{#if usuario.email}}
+            <input type="email" name="email" id="email" placeholder="Email usuario" value="{{usuario.email}}">
+            {{/if}}
+
+            <input type="tel" name="telefone" id="telefone" placeholder="Telefone" value="{{usuario.telefone}}" required>
+            <a href="/usuarios/editarsenha/{{usuario.id_usuario}}" class="link">Editar Senha</a>
+            <button type="submit">Atualizar</button>
+        </form>
+    </section>
+</main>

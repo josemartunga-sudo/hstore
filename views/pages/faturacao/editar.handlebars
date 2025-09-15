@@ -1,0 +1,40 @@
+{{>header}}
+<main class="main-page main-form">
+    <section class="main-page-form">
+        <h2>Editar Faturação</h2>
+        <form class="main-page-form-edit-faturacao">
+            <div class="main-page-form-campo">
+                Nome do/a sub-agente: {{agente.nome}}
+            </div>
+
+            <input type="number" value="{{faturacao.id_facturacao}}" name="id_facturacao" id="id_facturacao" placeholder="ID a faturacao"
+                required autocomplete="off" style="display: none;">
+
+            <input type="number" value="{{agente.id_agente}}" name="agente_id" id="agente_id" placeholder="ID do agente"
+                required autocomplete="off" style="display: none;">
+
+            <input type="number" value="{{faturacao.valor}}"  name="valor" id="valor" placeholder="Valor" required>
+
+            <select name="forma_pagamento" id="forma_pagamento">
+                {{#if ( eq faturacao.forma_pagamento "Mensal")}}
+                <option selected value="Mensal">Mensal</option>
+                <option value="Quinzenal">Quinzenal</option>
+                {{else}}
+                <option selected value="Quinzenal">Quinzenal</option>
+                <option value="Mensal">Mensal</option>
+                {{/if}}
+            </select>
+            
+            <select name="tipo_faturacao" id="tipo_faturacao">
+                {{#if ( eq faturacao.tipo_faturacao "Electrônico")}}
+                <option selected value="Electrônico">Electrônico</option>
+                <option value="Físico">Físico</option>
+                {{else}}
+                <option selected value="Físico">Físico</option>
+                <option value="Electrônico">Electrônico</option>
+                {{/if}}
+            </select>
+            <button type="submit">Actualizar</button>
+        </form>
+    </section>
+</main>
