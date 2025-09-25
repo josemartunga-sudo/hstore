@@ -11,9 +11,15 @@
                 <i class="fas fa-ellipsis-v"></i>
                 <ul class="main-page-detalhes-cabecalho-menu-escondido">
                     <li>
+                        
                         <i class="fas fa-edit" style="color: #4B1E78;"></i>
                         <a href="/agentes/editar/{{agente.id_agente}}"> Editar perfil</a>
                     </li>
+                     <li>
+                        <i class="fa-solid fa-arrows-rotate" style="color: #4B1E78;"></i>
+                        <a href="/agentes/forma/pagamento/alterar/{{agente.id_agente}}">Mudar forma de pagamento</a>
+                    </li>
+
                     <form class="formDeleteAgente">
                         <i class="fas fa-trash" style="color: #dd080f;"></i>
                         <input style="display: none;" type="text" name="id_agente" id="id_agente" value="{{agente.id_agente}}">
@@ -40,6 +46,8 @@
 
             <p class="designacao">Cadastrado por</p>
             <p class="valor">{{agente.usuario.nome}}</p>
+
+            
         </div>
 
         <div class="main-page-detalhes-botoes">
@@ -57,6 +65,10 @@
                 <i class="fas fa-history"></i>
                 <a href="/agentes/faturacoes/{{agente.id_agente}}">Ver Historico</a>
             </button>
+
+            
+
+
         </div>
     </section>
 </main>

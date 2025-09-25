@@ -14,7 +14,7 @@
     display: flex;
     flex-flow: column;
     height: 80vh;
-    margin-top: 65px;
+    margin-top: 50px;
     padding-left: 20px;
 
     h2 {
@@ -69,9 +69,9 @@
 
             .main-page-detalhes-cabecalho-menu-escondido {
                 position: absolute;
-
-                padding: 3px 6px;
-                width: 135px;
+                
+                padding: 7px 6px;
+                width: 240px;
                 box-shadow: 0 10px 30px #00000033;
                 border-radius: 5px;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -87,8 +87,8 @@
                 li,
                 form {
                     cursor: pointer;
-                    padding: 5px;
-                    margin-bottom: 4px;
+                    
+                    margin-bottom: 10px;
 
                     a {
                         color: var(--roxo);
@@ -131,6 +131,7 @@
                 height: 110px;
                 width: 110px;
                 border-radius: 50%;
+                margin-top: 40px;
             }
 
             h3 {

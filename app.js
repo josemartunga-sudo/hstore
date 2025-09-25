@@ -7,7 +7,6 @@
 const express = require("express");
 const server = express();
 
-
 // Carrega variáveis de ambiente (.env)
 const dotenv = require("dotenv");
 dotenv.config();
@@ -38,15 +37,26 @@ const cookieParser = require("cookie-parser");
  * ==================================
  */
 server.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            secure: false,
-        },
-    })
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false,
+    },
+  })
 );
+
+// Flash
+const flash = require("connect-flash");
+server.use(flash());
+
+// Middleware para passar mensagens para as views
+server.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  next();
+});
 
 /**
  * ==============================================
@@ -66,32 +76,33 @@ server.use(cookieParser());
  *  Configuração do motor de views
  * ================================
  */
+
 server.engine(
-    "handlebars",
-    handlebars.engine({
-        defaultLayout: "home", // Layout padrão em views/layouts/main.handlebars
-        partialsDir: "views/partials/",
-        helpers: {
-            'eq': (string1, string2) => {
-                if (!string1) {
-                    string1 = "";
-                }
-                if (!string2) {
-                    string2 = "";
-                }
-                return string1 === string2;
-            },
-            'getMoeda': (valor) => {
-                if (!valor) {
-                    valor = 0;
-                }
-                return valor.toLocaleString("pt-AO", {
-                    style: "currency",
-                    currency: "AOA"
-                });
-            }
+  "handlebars",
+  handlebars.engine({
+    defaultLayout: "home", // Layout padrão em views/layouts/main.handlebars
+    partialsDir: "views/partials/",
+    helpers: {
+      eq: (string1, string2) => {
+        if (!string1) {
+          string1 = "";
         }
-    })
+        if (!string2) {
+          string2 = "";
+        }
+        return string1 === string2;
+      },
+      getMoeda: (valor) => {
+        if (!valor) {
+          valor = 0;
+        }
+        return valor.toLocaleString("pt-AO", {
+          style: "currency",
+          currency: "AOA",
+        });
+      },
+    },
+  })
 );
 server.set("view engine", "handlebars");
 server.set("views", "views");
@@ -100,10 +111,9 @@ server.set("views", "views");
  * ================================
  *      Registro das Rotas
  * ================================
- */ 
+ */
 
 server.use(routes);
-
 
 /**
  * ================================
@@ -111,23 +121,26 @@ server.use(routes);
  * ================================
  */
 server.listen(port, () => {
-    console.log(`\nServidor rodando na porta em http:${process.env.DB_HOST}:${port}\n`);
+  console.log(
+    `\nServidor rodando na porta em http:${process.env.DB_HOST}:${port}\n`
+  );
 });
 
-
-server.get('/api/vendas-mensais', (req, res) => {
+server
+  .get("/api/vendas-mensais", (req, res) => {
     res.json([
-        { mes: 'Jan', total: 12000 },
-        { mes: 'Fev', total: 8000 },
-        { mes: 'Mar', total: 15000 },
-        { mes: 'Abr', total: 10000 },
+      { mes: "Jan", total: 12000 },
+      { mes: "Fev", total: 8000 },
+      { mes: "Mar", total: 15000 },
+      { mes: "Abr", total: 10000 },
     ]);
-}).get('/api/faturacoes', (req, res) => {
+  })
+  .get("/api/faturacoes", (req, res) => {
     res.json([
-        { tipo: 'Pagas', qtd: 10 },
-        { tipo: 'Pendentes', qtd: 11 },
+      { tipo: "Pagas", qtd: 10 },
+      { tipo: "Pendentes", qtd: 11 },
     ]);
-});
+  });
 
 /**
  * ================================
@@ -136,6 +149,6 @@ server.get('/api/vendas-mensais', (req, res) => {
  */
 // Verifica conexão com banco ao subir o servidor
 db.sequelize
-    .authenticate()
-    .then(() => console.log("Banco de dados conectado"))
-    .catch((err) => console.error(" Erro na conexão com o banco:", err));
+  .authenticate()
+  .then(() => console.log("Banco de dados conectado"))
+  .catch((err) => console.error(" Erro na conexão com o banco:", err));

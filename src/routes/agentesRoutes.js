@@ -110,6 +110,21 @@ agenteRoutes.get(
   agentesController.buscarFacturacoesAgentes
 );
 
+
+/**
+ * @route   GET /agentes//:id"
+ * @desc    Listar todas as vendas de um agente
+ * @acesso  Autenticado
+ */
+agenteRoutes.get(
+  "/forma/pagamento/alterar/:id",
+  agentesController.mudarFormaPagamento
+);
+
+
+
+
+
 /**
  * @route   GET /agentes/relatorio/:id
  * @desc    Gera um relatório do agente de acordo as parcelas de pagaento do mesmo no mês
