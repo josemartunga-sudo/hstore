@@ -59,6 +59,6 @@ CREATE TABLE IF NOT EXISTS `hstore`.`pagamentos` (
   ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
-insert into usuarios values(default, "Hermenegildo Sebastiao", "942199012", "hermenegildo@wilson.com", "Admin", "$2b$10$6lXlP79Zp9MWqgvP.wO7HOuNjF8eJghyf.7wVTq8aiIXrvi8yU0YS", default, default, default);
+insert into usuarios values(default, "Hermenegildo Sebastiao", "942199012", "hermenegildo@gmail.com", "Admin", "$2b$10$6lXlP79Zp9MWqgvP.wO7HOuNjF8eJghyf.7wVTq8aiIXrvi8yU0YS", default, default, default);
 
-insert into usuarios values(default, "Altino Sebastiao", "937413018", "altino@wilson.com", "Admin", "$2b$10$g2PNOqQhE.DBDTGw2oHwseF1V8GZLr7WsW6VS/0I7YcoaS9BtEG.S", default, default, default);
+insert into usuarios values(default, "Altino Sebastiao", "937413018", "altino@gmail.com", "Admin", "$2b$10$g2PNOqQhE.DBDTGw2oHwseF1V8GZLr7WsW6VS/0I7YcoaS9BtEG.S", default, default, default);

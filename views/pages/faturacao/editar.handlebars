@@ -9,11 +9,13 @@
 
             <input type="number" value="{{faturacao.id_facturacao}}" name="id_facturacao" id="id_facturacao" placeholder="ID a faturacao"
                 required autocomplete="off" style="display: none;">
-
+            
             <input type="number" value="{{agente.id_agente}}" name="agente_id" id="agente_id" placeholder="ID do agente"
                 required autocomplete="off" style="display: none;">
 
             <input type="number" value="{{faturacao.valor}}"  name="valor" id="valor" placeholder="Valor" required>
+
+            <input type="datetime" value="{{faturacao.data_faturacao}}"  name="data_faturacao" id="data_faturacao" required>
 
             <select name="forma_pagamento" id="forma_pagamento">
                 {{#if ( eq faturacao.forma_pagamento "Mensal")}}
@@ -34,6 +36,7 @@
                 <option value="Electrônico">Electrônico</option>
                 {{/if}}
             </select>
+
             <button type="submit">Actualizar</button>
         </form>
     </section>

@@ -19,8 +19,12 @@ class FaturacaoService {
      */
     criarFaturacao = async (usuarioId, dadosFaturacao) => {
         try {
-            const { agente_id, valor_electronico, valor_fisico, forma_pagamento } =
-                dadosFaturacao;
+            const {
+                agente_id,
+                valor_electronico,
+                valor_fisico,
+                forma_pagamento,
+            } = dadosFaturacao;
 
             let agenteEncontrado = false;
 
@@ -36,7 +40,10 @@ class FaturacaoService {
             }
 
             if (!agenteEncontrado) {
-                return { successo: false, mensagem: "Sub-agente não encontrado." };
+                return {
+                    successo: false,
+                    mensagem: "Sub-agente não encontrado.",
+                };
             }
 
             if (valor_electronico || valor_fisico) {
@@ -112,11 +119,16 @@ class FaturacaoService {
                 },
             });
             if (faturacoesEncontradas.length == 0) {
-                return { successo: false, mensagem: "Nenhuma faturação encontrada!" };
+                return {
+                    successo: false,
+                    mensagem: "Nenhuma faturação encontrada!",
+                };
             }
 
             faturacoesEncontradas.map((faturacao) => {
-                faturacao.data_faturacao = getFullStringDate(faturacao.data_faturacao);
+                faturacao.data_faturacao = getFullStringDate(
+                    faturacao.data_faturacao
+                );
             });
 
             return {
@@ -159,7 +171,10 @@ class FaturacaoService {
             });
 
             if (faturacaoEncontrada.length == 0) {
-                return { successo: false, mensagem: "Nenhuma faturação encontrada!" };
+                return {
+                    successo: false,
+                    mensagem: "Nenhuma faturação encontrada!",
+                };
             }
 
             faturacaoEncontrada.data_faturacao = getFullStringDate(
@@ -174,7 +189,10 @@ class FaturacaoService {
             };
         } catch (error) {
             console.log("\nErro no perfil da faturação..." + error);
-            return { successo: false, mensagem: "Erro no perfil da faturação!" };
+            return {
+                successo: false,
+                mensagem: "Erro no perfil da faturação!",
+            };
         }
     };
 
@@ -185,23 +203,36 @@ class FaturacaoService {
      */
     actualizarFacturacao = async (dados) => {
         try {
-            const { tipo, valor, forma_pagamento, tipo_faturacao, id_facturacao } =
-                dados;
+            const {
+                tipo,
+                valor,
+                forma_pagamento,
+                data_faturacao,
+                tipo_faturacao,
+                id_facturacao,
+            } = dados;
             const faturacaoAtualizada = await faturacoes.update(
                 {
                     tipo: tipo,
                     valor: valor,
                     tipo_faturacao: tipo_faturacao,
+                    data_faturacao: data_faturacao,
                     forma_pagamento: forma_pagamento,
                 },
                 { where: { id_facturacao: id_facturacao } }
             );
 
             if (!faturacaoAtualizada) {
-                return { successo: false, mensagem: "Faturação não encontrada" };
+                return {
+                    successo: false,
+                    mensagem: "Faturação não encontrada",
+                };
             }
 
-            return { successo: true, mensagem: "Faturação atualizada com sucesso." };
+            return {
+                successo: true,
+                mensagem: "Faturação atualizada com sucesso.",
+            };
         } catch (erro) {
             console.error("Erro ao atualizar faturação:", erro);
             return { successo: false, mensagem: "Confirme os dados!" };
@@ -217,20 +248,25 @@ class FaturacaoService {
         const { id_facturacao } = dados;
         try {
             const deletada = await faturacoes.destroy({
-                where: { id_facturacao: id_facturacao }
+                where: { id_facturacao: id_facturacao },
             });
 
             if (deletada) {
-                return { successo: true, mensagem: "Faturação deletada com sucesso." };
+                return {
+                    successo: true,
+                    mensagem: "Faturação deletada com sucesso.",
+                };
             } else {
-                return { successo: false, mensagem: "Faturação não encontrado!" };
+                return {
+                    successo: false,
+                    mensagem: "Faturação não encontrado!",
+                };
             }
         } catch (erro) {
             console.error("Erro ao deletar Faturação:", erro);
             return { successo: false, mensagem: "Tente novamente mais tarde!" };
         }
     }
-    
 
     /**
      * Função que transita de estado de uma faturação,de pendente para paga
@@ -247,10 +283,16 @@ class FaturacaoService {
             );
 
             if (!faturacaoAtualizada) {
-                return { successo: false, mensagem: "Faturação não encontrada" };
+                return {
+                    successo: false,
+                    mensagem: "Faturação não encontrada",
+                };
             }
 
-            return { successo: true, mensagem: "Faturação resolvida com sucesso." };
+            return {
+                successo: true,
+                mensagem: "Faturação resolvida com sucesso.",
+            };
         } catch (erro) {
             console.error("Erro ao resolver faturação:", erro);
             return { successo: false, mensagem: "Internal server error!" };
@@ -278,7 +320,10 @@ class FaturacaoService {
             });
 
             if (!agenteEncontrado) {
-                return { successo: false, mensagem: "Nenhum Sub-agente encontrado!" };
+                return {
+                    successo: false,
+                    mensagem: "Nenhum Sub-agente encontrado!",
+                };
             }
 
             const faturacoesEncontradas = await faturacoes.findAll({
@@ -308,7 +353,9 @@ class FaturacaoService {
             }
 
             faturacoesEncontradas.map((faturacao) => {
-                faturacao.data_faturacao = getFullStringDate(faturacao.data_faturacao);
+                faturacao.data_faturacao = getFullStringDate(
+                    faturacao.data_faturacao
+                );
             });
 
             return {
@@ -319,7 +366,10 @@ class FaturacaoService {
             };
         } catch (error) {
             console.log("\nErro buscar faturações do agente..." + error);
-            return { successo: false, mensagem: "Erro buscar faturações do agente!" };
+            return {
+                successo: false,
+                mensagem: "Erro buscar faturações do agente!",
+            };
         }
     };
 }

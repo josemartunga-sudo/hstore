@@ -181,7 +181,7 @@ class FacturacaoController {
 
             if (!agente) {
                 return res.redirect("/agentes");
-            }
+            }            
 
             res.render("pages/faturacao/editar", {
                 titulo: 'Editar Faturação',
