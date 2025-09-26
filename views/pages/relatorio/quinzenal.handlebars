@@ -5,57 +5,49 @@
             <form class="main-page-hero-form main-page-hero-form-relatorio-empresa">
                 <div class="main-page-hero-form-busca">
                     <input class="main-page-hero-form-busca-campo" type="month" name="data-relatorio"
-                        id="data-relatorio" min="2016-01" max="2049-12" value="{{resumoMensal.data}}">
+                        id="data-relatorio" min="2016-01" max="2049-12" value="{{resumoQuinzenal.data}}">
                     <i class="fas fa-calendar-alt fa-1x" style="color: #F7941E;"></i>
                 </div>
 
                 <select name="filtro" id="filtro">
-                    {{#if (eq resumoMensal.filtro "Mensal")}}
-                        <option value="Geral">Geral</option>
-                        <option selected value="Mensal">Mensal</option>
-                        <option value="Quinzenal">Quinzenal</option>
+                    {{#if (eq resumoQuinzenal.filtro "Segunda")}}
+                        <option value="Primeira">Primeira</option>
+                        <option selected value="Segunda">Segunda</option>
                     {{else}}
-                            {{#if (eq resumoMensal.filtro "Quinzenal")}}
-                            <option value="Geral">Geral</option>
-                            <option value="Mensal">Mensal</option>
-                            <option selected value="Quinzenal">Quinzenal</option>
-                        {{else}}
-                            <option selected value="Geral">Geral</option>
-                            <option value="Mensal">Mensal</option>
-                            <option value="Quinzenal">Quinzenal</option>
-                        {{/if}}
+                        <option selected value="Primeira">Primeira</option>
+                        <option value="Segunda">Segunda</option>
                     {{/if}}
                 </select>
             </form>
             <div class="main-page-titulo">
-                <h2>Relatório Mensal das faturacões {{resumoMensal.filtro}}</h2>
+                <h2>Relatório Quinzenal da {{resumoQuinzenal.filtro}} quinzena</h2>
             </div>
         </section>
         <section class="main-page-cards">
             <div class="main-page-cards-card">
                 <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
                 <p>Total Vendido</p>
-                <h3>{{getMoeda resumoMensal.totalVendido}}</h3>
+                <h3>{{getMoeda resumoQuinzenal.totalVendido}}</h3>
             </div>
             <div class="main-page-cards-card">
                 <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
                 <p>Total Pago</p>
-                <h3>{{getMoeda resumoMensal.totalPago}}</h3>
+                <h3>{{getMoeda resumoQuinzenal.totalPago}}</h3>
             </div>
             <div class="main-page-cards-card">
                 <i class="fas fa-hand-holding-usd fa-2x" style="color: #F7941E;"></i>
                 <p>Total Extraído</p>
-                <h3>{{getMoeda resumoMensal.totalExtraido}}</h3>
+                <h3>{{getMoeda resumoQuinzenal.totalExtraido}}</h3>
             </div>
-            <a href="/faturacao/mensal?data={{resumoMensal.data}}&filtro={{resumoMensal.filtro}}" class="main-page-cards-card">
+            <a href="/faturacao/mensal?data={{resumoQuinzenal.data}}&filtro=Quinzenal" class="main-page-cards-card">
                 <i class="fas fa-store fa-2x" style="color: #F7941E;"></i>
                 <p>Faturações</p>
-                <h3>{{resumoMensal.totalFaturacoes}}</h3>
+                <h3>{{resumoQuinzenal.totalFaturacoes}}</h3>
             </a>
-            <a href="/relatorios/agentespagos?data={{resumoMensal.data}}&filtro={{resumoMensal.filtro}}"" class="main-page-cards-card expancivel">
+            <a href="/relatorios/agentespagos?data={{resumoQuinzenal.data}}&filtro=Quinzenal"" class="main-page-cards-card expancivel">
                 <i class="fas fa-check-circle fa-2x" style="color: #F7941E;"></i>
                 <p>Sub-agentes Pagos</p>
-                <h3>{{resumoMensal.agentesPagos}}</h3>
+                <h3>{{resumoQuinzenal.agentesPagos}}</h3>
             </a>
 
 

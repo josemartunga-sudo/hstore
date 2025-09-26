@@ -11,7 +11,7 @@ const faturacao = models.faturacoes;
 const RelatorioService = require("../services/relatorioService");
 const relatorioService = new RelatorioService();
 const { Op, fn, col, where } = require("sequelize")
-const { getStringDate, getFullStringDate } = require("../utils")
+const { getStringDate, getFullStringDate, getSimpleDate } = require("../utils")
 
 class FacturacaoController {
     /**
@@ -81,13 +81,13 @@ class FacturacaoController {
      */
     buscarFacturacoes = async (req, res) => {
         try {
-            let { data } = req.query;
+            let { data, filtro } = req.query;
             if (!data) {
                 data = getStringDate();
             }
             data = new Date(data);
-            const resumoDiario = await relatorioService.pegarResumoDiarioDaEmpresa(data);
-            const response = await facturacaoService.pegarFaturacoes(data, null);
+            const resumoDiario = await relatorioService.pegarResumoDiarioDaEmpresa(data, filtro);
+            const response = await facturacaoService.pegarFaturacoes(data, null, filtro);
 
             res.render("pages/faturacao/faturacoes", {
                 titulo: "Faturações",
@@ -108,16 +108,14 @@ class FacturacaoController {
      * @desc Lista todas as facturações cadastradas de um mês
      */
     buscarFacturacoesMensal = async (req, res) => {
-        let { data } = req.query;
+        let { data, filtro } = req.query;
         if (!data) {
             data = getSimpleDate();
         }
         data = new Date(data);
 
-
-
         try {
-            const response = await relatorioService.pegarResumoMensalDaEmpresa(data);
+            const response = await relatorioService.pegarResumoMensalDaEmpresa(data, filtro);
 
             if (!response.successo) {
                 return res.redirect("/");

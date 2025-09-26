@@ -122,7 +122,7 @@ server.use(routes);
  */
 server.listen(port, () => {
   console.log(
-    `\nServidor rodando na porta em http:${process.env.DB_HOST}:${port}\n`
+    `\nServidor rodando em http:localhost:${port}\n`
   );
 });
 

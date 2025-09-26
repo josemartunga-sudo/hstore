@@ -7,15 +7,11 @@
                 Para o/a Sub-agente: {{agente.nome}}
             </div>
             
-            <input type="number" value="{{agente.id_agente}}" name="agente_id" id="agente_id" placeholder="ID do agente"
-                required autocomplete="off" style="display: none;">
+            <input type="number" value="{{agente.id_agente}}" name="agente_id" id="agente_id" placeholder="ID do agente" required autocomplete="off" style="display: none;">
 
             <input type="number" name="valor_electronico" id="valor_electronico" placeholder="Valor do saldo electronico">
 
              <input type="number" name="valor_fisico" id="valor_fisico" placeholder="Valor do saldo físico">
-
-            <input type="number" name="valor_electronico" id="valor_electronico" placeholder="Valor do saldo electronico">
-
             
             <select name="forma_pagamento" id="forma_pagamento">
                 {{#if (eq forma_pagamento "Mensal")}}

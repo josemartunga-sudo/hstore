@@ -91,7 +91,7 @@ class FaturacaoService {
      * successo: Boolean,
      * mensagem: String }}
      */
-    pegarFaturacoes = async (data, limit) => {
+    pegarFaturacoes = async (data, limit, filtro) => {
         try {
             if (!data) {
                 data = new Date();
@@ -99,6 +99,16 @@ class FaturacaoService {
             const ano = new Date(data).getFullYear();
             const mes = new Date(data).getMonth() + 1;
             const dia = new Date(data).toJSON().slice(8, 10);
+
+            let forma_pagamento;
+            if (!filtro || filtro.includes("Geral")) {
+                filtro = "Geral";
+                forma_pagamento = "%%";
+            } else if (filtro.includes("Mensal")) {
+                forma_pagamento = "%Mensal%";
+            } else if (filtro.includes("Quinzenal")) {
+                forma_pagamento = "%Quinzenal%";
+            }
 
             const faturacoesEncontradas = await faturacoes.findAll({
                 raw: true,
@@ -109,6 +119,9 @@ class FaturacaoService {
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
                         where(fn("DAY", col("data_faturacao")), dia),
+                        where(col("forma_pagamento"), {
+                            [Op.like]: forma_pagamento,
+                        }),
                     ],
                 },
                 order: [["data_faturacao", "DESC"]],
@@ -133,6 +146,7 @@ class FaturacaoService {
 
             return {
                 faturacoes: faturacoesEncontradas,
+                filtro: filtro,
                 successo: true,
                 mensagem: "Faturações encontradas!",
             };

@@ -8,9 +8,27 @@
                         id="data-relatorio" min="2016-01" max="2049-12" value="{{resumoMensal.data}}">
                     <i class="fas fa-calendar-alt fa-1x" style="color: #F7941E;"></i>
                 </div>
+
+                <select name="filtro" id="filtro">
+                    {{#if (eq resumoMensal.filtro "Mensal")}}
+                        <option value="Geral">Geral</option>
+                        <option selected value="Mensal">Mensal</option>
+                        <option value="Quinzenal">Quinzenal</option>
+                    {{else}}
+                            {{#if (eq resumoMensal.filtro "Quinzenal")}}
+                            <option value="Geral">Geral</option>
+                            <option value="Mensal">Mensal</option>
+                            <option selected value="Quinzenal">Quinzenal</option>
+                        {{else}}
+                            <option selected value="Geral">Geral</option>
+                            <option value="Mensal">Mensal</option>
+                            <option value="Quinzenal">Quinzenal</option>
+                        {{/if}}
+                    {{/if}}
+                </select>
             </form>
         </section>
-        <h2 class="main-page-lista-cabeçalho">Faturações do mês
+        <h2 class="main-page-lista-cabeçalho">Faturações {{resumoMensal.filtro}} do mês
             <a class="btn-plus numero-total">{{resumoMensal.totalFaturacoes}}</a>
         </h2>
     </div>

@@ -69,37 +69,49 @@
 
             .main-page-detalhes-cabecalho-menu-escondido {
                 position: absolute;
-                
-                padding: 7px 6px;
-                width: 240px;
-                box-shadow: 0 10px 30px #00000033;
-                border-radius: 5px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                text-align: left;
+                min-width: 145px;
 
-                right: 10px;
-                top: 38px;
-                z-index: 5;
+                background-color: #ffffff;
+                box-shadow: 0 10px 30px #00000033;
+                border-radius: 10px;
+                overflow: hidden;
+                padding: 6px;
                 display: none;
+
+                right: 5px;
+                top: 8px;
+                z-index: 5;
 
                 transition: 0.2s ease;
 
                 li,
                 form {
                     cursor: pointer;
-                    
-                    margin-bottom: 10px;
+                    padding: 6px 6px 6px 8px;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+
+                    transition: .3s;
 
                     a {
                         color: var(--roxo);
                     }
+
                     button {
                         color: #dd080f;
                         cursor: pointer;
                         border: none;
-                        background-color: none;
+                        background-color: transparent;
+                        text-align: left;
                         font-size: 1em;
+                        animation: none;
                     }
+                }
+
+                li:hover, form:hover {
+                    background-color: #f0f0f086;
                 }
             }
 

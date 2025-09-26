@@ -23,7 +23,7 @@ class relatorioService {
      * successo: boolean
      * }}}
      */
-    pegarResumoDiarioDaEmpresa = async (data) => {
+    pegarResumoDiarioDaEmpresa = async (data, filtro) => {
         // Se a data não for enviada pegue a data atual do sistema
         if (!data) {
             data = new Date();
@@ -32,6 +32,16 @@ class relatorioService {
         const mes = new Date(data).getMonth() + 1;
         const dia = new Date(data).toJSON().slice(8, 10);
 
+        let forma_pagamento;
+        if (!filtro || filtro.includes("Geral")) {
+            filtro = "Geral";
+            forma_pagamento = "%%";
+        } else if (filtro.includes("Mensal")) {
+            forma_pagamento = "%Mensal%";
+        } else if (filtro.includes("Quinzenal")) {
+            forma_pagamento = "%Quinzenal%";
+        }
+
         const totalAgentes = await agentes.count();
 
         const numeroDeVendas = await faturacoes.count({
@@ -39,9 +49,12 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                    where(fn("DAY", col("data_faturacao")), dia)
-                ]
-            }
+                    where(fn("DAY", col("data_faturacao")), dia),
+                    where(col("forma_pagamento"), {
+                        [Op.like]: forma_pagamento,
+                    }),
+                ],
+            },
         });
 
         let totalVendido = await faturacoes.sum("valor", {
@@ -49,18 +62,19 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                    where(fn("DAY", col("data_faturacao")), dia)
-                ]
-            }
+                    where(fn("DAY", col("data_faturacao")), dia),
+                ],
+            },
         });
 
         const resumoDiario = {
             totalAgentes: totalAgentes,
             numeroDeVendas: numeroDeVendas,
             totalVendido: totalVendido,
+            filtro: filtro,
             data: getStringDate(data),
-            successo: true
-        }
+            successo: true,
+        };
 
         return resumoDiario;
     };
@@ -79,10 +93,13 @@ class relatorioService {
     pegarResumoMensalDoAgente = async (id_agente, data) => {
         const agenteEncontrado = await agentes.findOne({
             raw: true,
-            where: { id_agente: id_agente }
+            where: { id_agente: id_agente },
         });
         if (!agenteEncontrado) {
-            return { successo: false, mensagem: "Nenhum Sub-agente encontrado!" }
+            return {
+                successo: false,
+                mensagem: "Nenhum Sub-agente encontrado!",
+            };
         }
 
         // Se a data não for enviada pegue a data atual
@@ -98,8 +115,8 @@ class relatorioService {
                     where(col("agente_id"), id_agente),
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                ]
-            }
+                ],
+            },
         });
 
         let totalComprado = await faturacoes.sum("valor", {
@@ -108,18 +125,18 @@ class relatorioService {
                     where(col("agente_id"), id_agente),
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                ]
-            }
+                ],
+            },
         });
         if (!totalComprado) {
-            totalComprado = 0.00;
+            totalComprado = 0.0;
         }
         const resumoMensalDoAgente = {
             totalComprado: totalComprado,
             comprasEfetuadas: comprasEfetuadas,
             data: getSimpleDate(data),
-            successo: true
-        }
+            successo: true,
+        };
 
         return resumoMensalDoAgente;
     };
@@ -143,10 +160,13 @@ class relatorioService {
     pegarRelatorioDePagamentoDoAgente = async (id_agente, data, parcela) => {
         const agenteEncontrado = await agentes.findOne({
             raw: true,
-            where: { id_agente: id_agente }
+            where: { id_agente: id_agente },
         });
         if (!agenteEncontrado) {
-            return { successo: false, mensagem: "Nenhum Sub-agente encontrado!" }
+            return {
+                successo: false,
+                mensagem: "Nenhum Sub-agente encontrado!",
+            };
         }
 
         // Se a data não for enviada pegue a data atual
@@ -165,20 +185,29 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                    ]
-                }
+                    ],
+                },
             });
 
             // Se o agente não tiver faturado neste mês ou ele for Mensal pegue o valor Única
-            if (!faturacaoEncontrado || faturacaoEncontrado.forma_pagamento == "Mensal") {
+            if (
+                !faturacaoEncontrado ||
+                faturacaoEncontrado.forma_pagamento == "Mensal"
+            ) {
                 parcela = "Única";
             } else {
                 parcela = "Primeira";
             }
         }
 
-        const resumoParcelarDoAgente = await this.pegarResumoParcelarDoAgente(id_agente, data, parcela);
-        const pagamento = this.calcularBonusAgente(resumoParcelarDoAgente.totalComprado);
+        const resumoParcelarDoAgente = await this.pegarResumoParcelarDoAgente(
+            id_agente,
+            data,
+            parcela
+        );
+        const pagamento = this.calcularBonusAgente(
+            resumoParcelarDoAgente.totalComprado
+        );
 
         const relatorioFinal = {
             ...resumoParcelarDoAgente,
@@ -186,8 +215,8 @@ class relatorioService {
             bonus: pagamento.bonus,
             resto: pagamento.resto,
             caixas: pagamento.caixas,
-            agente: agenteEncontrado
-        }
+            agente: agenteEncontrado,
+        };
         return relatorioFinal;
     };
 
@@ -214,16 +243,29 @@ class relatorioService {
                 return { successo: false, mensagem: "Agente não encontrado." };
             }
 
-            const response = await this.verificarPagamento(id_agente, data_relatorio, parcela);
+            const response = await this.verificarPagamento(
+                id_agente,
+                data_relatorio,
+                parcela
+            );
             if (response.newPage) {
-                return { successo: false, newPage: true, page: response.page, mensagem: response.mensagem };
+                return {
+                    successo: false,
+                    newPage: true,
+                    page: response.page,
+                    mensagem: response.mensagem,
+                };
             }
 
             if (!response.successo) {
                 return { successo: true, mensagem: response.mensagem };
             }
 
-            const dadosPagamento = await this.pegarRelatorioDePagamentoDoAgente(id_agente, data_relatorio, parcela);
+            const dadosPagamento = await this.pegarRelatorioDePagamentoDoAgente(
+                id_agente,
+                data_relatorio,
+                parcela
+            );
 
             await pagamento.create({
                 data_correspondente: dadosPagamento.data,
@@ -231,19 +273,29 @@ class relatorioService {
                 resto: dadosPagamento.resto,
                 bonus: dadosPagamento.bonus,
                 agente_id: id_agente,
-                usuario_id: usuarioId
+                usuario_id: usuarioId,
             });
 
-            return { successo: true, mensagem: "Pagamento do Sub-agente " + agenteEncontrado.nome + " registrado!" };
+            return {
+                successo: true,
+                mensagem:
+                    "Pagamento do Sub-agente " +
+                    agenteEncontrado.nome +
+                    " registrado!",
+            };
         } catch (erro) {
             console.error("Erro ao cadastrar faturação:", erro);
-            return { successo: false, mensagem: "Erro interno ao cadastrar faturação." };
+            return {
+                successo: false,
+                mensagem: "Erro interno ao cadastrar faturação.",
+            };
         }
     };
 
     /**
-     * Gerar um relatório diário com os dados de um dia
+     * Gerar um relatório mensal com os dados de um mes
      * @param {{ data: Date }} data - Data do relatório
+     * @param {{ filtro: Strong }} filtro - Filtro que vai indicar quis dados buscar
      * @dependence buscarAgentesPagosNaoPagos()
      * @returns {Object|{resumoMensalDaEmpresa: {
      * totalPago: Number,
@@ -256,13 +308,26 @@ class relatorioService {
      * successo: boolean
      * }}}
      */
-    pegarResumoMensalDaEmpresa = async (data) => {
+    pegarResumoMensalDaEmpresa = async (data, filtro) => {
         if (!data) {
             data = new Date();
         }
         const ano = new Date(data).getFullYear();
         const mes = new Date(data).getMonth() + 1;
 
+        let parcela;
+        let forma_pagamento;
+        if (!filtro || filtro.includes("Geral")) {
+            filtro = "Geral";
+            parcela = "%%";
+            forma_pagamento = "%%";
+        } else if (filtro.includes("Mensal")) {
+            parcela = "%nica%";
+            forma_pagamento = "%Mensal%";
+        } else if (filtro.includes("Quinzenal")) {
+            parcela = "%e%";
+            forma_pagamento = "%Quinzenal%";
+        }
         /**
          * @description Total pago de bonus aos agentes
          */
@@ -271,11 +336,12 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_correspondente")), ano),
                     where(fn("MONTH", col("data_correspondente")), mes),
-                ]
-            }
+                    where(col("parcela"), { [Op.like]: parcela }),
+                ],
+            },
         });
         if (!totalPago) {
-            totalPago = 0.00;
+            totalPago = 0.0;
         }
 
         /**
@@ -286,8 +352,9 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_correspondente")), ano),
                     where(fn("MONTH", col("data_correspondente")), mes),
-                ]
-            }
+                    where(col("parcela"), { [Op.like]: parcela }),
+                ],
+            },
         });
         if (!agentesPagos) {
             agentesPagos = 0;
@@ -297,9 +364,12 @@ class relatorioService {
             where: {
                 [Op.and]: [
                     where(fn("YEAR", col("data_faturacao")), ano),
-                    where(fn("MONTH", col("data_faturacao")), mes)
-                ]
-            }
+                    where(fn("MONTH", col("data_faturacao")), mes),
+                    where(col("forma_pagamento"), {
+                        [Op.like]: forma_pagamento,
+                    }),
+                ],
+            },
         });
 
         /**
@@ -310,11 +380,12 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_correspondente")), ano),
                     where(fn("MONTH", col("data_correspondente")), mes),
-                ]
-            }
+                    where(col("parcela"), { [Op.like]: parcela }),
+                ],
+            },
         });
         if (!totalExtraido) {
-            totalExtraido = 0.00;
+            totalExtraido = 0.0;
         }
 
         /**
@@ -325,11 +396,156 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                ]
-            }
+                    where(col("forma_pagamento"), {
+                        [Op.like]: forma_pagamento,
+                    }),
+                ],
+            },
         });
         if (!totalVendido) {
-            totalVendido = 0.00;
+            totalVendido = 0.0;
+        }
+
+        const responsePagamentos = await this.buscarAgentesPagosNaoPagos(
+            data,
+            forma_pagamento,
+            parcela
+        );
+
+        const resumoMensal = {
+            totalPago: totalPago,
+            totalExtraido: totalExtraido,
+            totalVendido: totalVendido,
+            totalFaturacoes: totalFaturacoes,
+            agentesPagos: agentesPagos,
+            listaAgentesPagos: responsePagamentos.listaAgentesPagos,
+            listaFaturacoes: responsePagamentos.listaFaturacoes,
+            data: getSimpleDate(data),
+            filtro: filtro,
+            successo: true,
+        };
+        return resumoMensal;
+    };
+
+    /**
+     * Gerar um relatório quinzenal com os dados de um periodo
+     * @param {{ data: Date }} data - Data do relatório
+     * @param {{ filtro: Strong }} filtro - Filtro que vai indicar quis dados buscar
+     * @dependence buscarAgentesPagosNaoPagos()
+     * @returns {Object|{resumoMensalDaEmpresa: {
+     * totalPago: Number,
+     * totalExtraido: Number,
+     * totalVendido: Number,
+     * agentesPagos: Number,
+     * listaAgentesPagos: Object[Array],
+     * listaFaturacoes: Object[Array],
+     * data: Date,
+     * successo: boolean
+     * }}}
+     */
+    pegarResumoQuinzenalDaEmpresa = async (data, filtro) => {
+        if (!data) {
+            data = new Date();
+        }
+        const ano = new Date(data).getFullYear();
+        const mes = new Date(data).getMonth() + 1;
+
+        let parcela;
+        let forma_pagamento;
+        let periodo;
+
+        if (!filtro || filtro.includes("Primeira")) {
+            filtro = "Primeira";
+            parcela = "%Primeira%";
+            forma_pagamento = "%Quinzenal%";
+            periodo = [1, 15];
+        } else if (filtro.includes("Segunda")) {
+            parcela = "%Segunda%";
+            forma_pagamento = "%Quinzenal%";
+            periodo = [16, 32];
+        }
+        /**
+         * @description Total pago de bonus aos agentes
+         */
+        let totalPago = await pagamento.sum("bonus", {
+            where: {
+                [Op.and]: [
+                    where(fn("YEAR", col("data_correspondente")), ano),
+                    where(fn("MONTH", col("data_correspondente")), mes),
+                    where(col("parcela"), { [Op.like]: parcela }),
+                ],
+            },
+        });
+        if (!totalPago) {
+            totalPago = 0.0;
+        }
+
+        /**
+         * @description Numero total de agentes pagos
+         */
+        let agentesPagos = await pagamento.count({
+            where: {
+                [Op.and]: [
+                    where(fn("YEAR", col("data_correspondente")), ano),
+                    where(fn("MONTH", col("data_correspondente")), mes),
+                    where(col("parcela"), { [Op.like]: parcela }),
+                ],
+            },
+        });
+        if (!agentesPagos) {
+            agentesPagos = 0;
+        }
+
+        const totalFaturacoes = await faturacoes.count({
+            where: {
+                [Op.and]: [
+                    where(fn("YEAR", col("data_faturacao")), ano),
+                    where(fn("MONTH", col("data_faturacao")), mes),
+                    where(col("forma_pagamento"), {
+                        [Op.like]: forma_pagamento,
+                    }),
+                    where(fn("DAY", col("data_faturacao")), {
+                        [Op.between]: periodo,
+                    }),
+                ],
+            },
+        });
+
+        /**
+         * @description Valor total extraído do resto das faturações dos gentes
+         */
+        let totalExtraido = await pagamento.sum("resto", {
+            where: {
+                [Op.and]: [
+                    where(fn("YEAR", col("data_correspondente")), ano),
+                    where(fn("MONTH", col("data_correspondente")), mes),
+                    where(col("parcela"), { [Op.like]: parcela }),
+                ],
+            },
+        });
+        if (!totalExtraido) {
+            totalExtraido = 0.0;
+        }
+
+        /**
+         * @description Valor total vendido pela empresa naquele mês
+         */
+        let totalVendido = await faturacoes.sum("valor", {
+            where: {
+                [Op.and]: [
+                    where(fn("YEAR", col("data_faturacao")), ano),
+                    where(fn("MONTH", col("data_faturacao")), mes),
+                    where(col("forma_pagamento"), {
+                        [Op.like]: forma_pagamento,
+                    }),
+                    where(fn("DAY", col("data_faturacao")), {
+                        [Op.between]: periodo,
+                    }),
+                ],
+            },
+        });
+        if (!totalVendido) {
+            totalVendido = 0.0;
         }
 
         const responsePagamentos = await this.buscarAgentesPagosNaoPagos(data);
@@ -343,12 +559,11 @@ class relatorioService {
             listaAgentesPagos: responsePagamentos.listaAgentesPagos,
             listaFaturacoes: responsePagamentos.listaFaturacoes,
             data: getSimpleDate(data),
-            successo: true
-        }
+            filtro: filtro,
+            successo: true,
+        };
         return resumoMensal;
     };
-
-
 
     // FUNÇÕES USADAS INTERNAMENTE
     /**
@@ -367,10 +582,13 @@ class relatorioService {
     pegarResumoParcelarDoAgente = async (id_agente, data, parcela) => {
         const agenteEncontrado = await agentes.findOne({
             raw: true,
-            where: { id_agente: id_agente }
+            where: { id_agente: id_agente },
         });
         if (!agenteEncontrado) {
-            return { successo: false, mensagem: "Nenhum Sub-agente encontrado!" }
+            return {
+                successo: false,
+                mensagem: "Nenhum Sub-agente encontrado!",
+            };
         }
 
         if (!data) {
@@ -385,9 +603,9 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                    where(col("agente_id"), agenteEncontrado.id_agente)
-                ]
-            }
+                    where(col("agente_id"), agenteEncontrado.id_agente),
+                ],
+            },
         });
 
         let forma_pagamento = faturacaoEncontrado?.forma_pagamento;
@@ -405,8 +623,8 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                    ]
-                }
+                    ],
+                },
             });
 
             totalComprado = await faturacoes.sum("valor", {
@@ -415,8 +633,8 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                    ]
-                }
+                    ],
+                },
             });
         } else if (parcela == "Primeira") {
             comprasEfetuadas = await faturacoes.count({
@@ -427,12 +645,11 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                        where(fn("DAY", col("data_faturacao")),
-                            {
-                                [Op.between]: [1, 15]
-                            })
-                    ]
-                }
+                        where(fn("DAY", col("data_faturacao")), {
+                            [Op.between]: [1, 15],
+                        }),
+                    ],
+                },
             });
 
             totalComprado = await faturacoes.sum("valor", {
@@ -441,12 +658,11 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                        where(fn("DAY", col("data_faturacao")),
-                            {
-                                [Op.between]: [1, 15]
-                            })
-                    ]
-                }
+                        where(fn("DAY", col("data_faturacao")), {
+                            [Op.between]: [1, 15],
+                        }),
+                    ],
+                },
             });
         } else if (parcela == "Segunda") {
             comprasEfetuadas = await faturacoes.count({
@@ -457,12 +673,11 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                        where(fn("DAY", col("data_faturacao")),
-                            {
-                                [Op.between]: [16, 32]
-                            })
-                    ]
-                }
+                        where(fn("DAY", col("data_faturacao")), {
+                            [Op.between]: [16, 32],
+                        }),
+                    ],
+                },
             });
 
             totalComprado = await faturacoes.sum("valor", {
@@ -471,12 +686,11 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                        where(fn("DAY", col("data_faturacao")),
-                            {
-                                [Op.between]: [16, 32]
-                            })
-                    ]
-                }
+                        where(fn("DAY", col("data_faturacao")), {
+                            [Op.between]: [16, 32],
+                        }),
+                    ],
+                },
             });
         }
 
@@ -485,8 +699,8 @@ class relatorioService {
             comprasEfetuadas: comprasEfetuadas,
             forma_pagamento: forma_pagamento,
             data: getSimpleDate(data),
-            successo: true
-        }
+            successo: true,
+        };
         return resumoPorParcela;
     };
 
@@ -502,8 +716,8 @@ class relatorioService {
         let resumo = {
             bonus: 0.0,
             resto: 0.0,
-            caixas: 0
-        }
+            caixas: 0,
+        };
 
         if (comprasEfetuadas == 0) {
             return resumo;
@@ -544,22 +758,27 @@ class relatorioService {
          */
         const mesAtual = new Date().getMonth() + 1;
         // Se a parcela for única ou a segunda
-        if ((parcela == "Única") || (parcela == "Segunda")) {
+        if (parcela == "Única" || parcela == "Segunda") {
             /**
              * @description O pagamento não pode ser feito no mesmo mês, ou seja só podemos pagar um agente na condição anterior no mês a seguir ao mês atual
              */
-            if ((mesAtual <= mes)) {
-                return { successo: false, mensagem: "O período de faturação ainda está aberto!" }
+            if (mesAtual <= mes) {
+                return {
+                    successo: false,
+                    mensagem: "O período de faturação ainda está aberto!",
+                };
             }
-
         } else if (parcela == "Primeira") {
             /**
              * @description Se for a primeira parcela ela pode ser paga depois da primeira quinzena do mes atual
              */
-            const diaAtual = new Date().toJSON().slice(8, 10);            
-            if ((mesAtual <= mes)) {
+            const diaAtual = new Date().toJSON().slice(8, 10);
+            if (mesAtual <= mes) {
                 if (diaAtual <= 15) {
-                    return { successo: false, mensagem: "O período de faturação ainda está aberto!" }
+                    return {
+                        successo: false,
+                        mensagem: "O período de faturação ainda está aberto!",
+                    };
                 }
             }
         }
@@ -576,11 +795,14 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                    ]
-                }
+                    ],
+                },
             });
             if (faturacoesResolvidas.length == 0) {
-                return { successo: false, mensagem: "O Sub-agente não tem faturações!" }
+                return {
+                    successo: false,
+                    mensagem: "O Sub-agente não tem faturações!",
+                };
             }
         } else if (parcela == "Primeira") {
             const faturacoesResolvidas = await faturacoes.findAll({
@@ -591,15 +813,17 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                        where(fn("DAY", col("data_faturacao")),
-                            {
-                                [Op.between]: [1, 15]
-                            })
-                    ]
-                }
+                        where(fn("DAY", col("data_faturacao")), {
+                            [Op.between]: [1, 15],
+                        }),
+                    ],
+                },
             });
             if (faturacoesResolvidas.length == 0) {
-                return { successo: false, mensagem: "O Sub-agente não tem faturações!" }
+                return {
+                    successo: false,
+                    mensagem: "O Sub-agente não tem faturações!",
+                };
             }
         } else if (parcela == "Segunda") {
             const faturacoesResolvidas = await faturacoes.findAll({
@@ -610,15 +834,17 @@ class relatorioService {
                         where(col("agente_id"), id_agente),
                         where(fn("YEAR", col("data_faturacao")), ano),
                         where(fn("MONTH", col("data_faturacao")), mes),
-                        where(fn("DAY", col("data_faturacao")),
-                            {
-                                [Op.between]: [16, 32]
-                            })
-                    ]
-                }
+                        where(fn("DAY", col("data_faturacao")), {
+                            [Op.between]: [16, 32],
+                        }),
+                    ],
+                },
             });
             if (faturacoesResolvidas.length == 0) {
-                return { successo: false, mensagem: "O Sub-agente não tem faturações!" }
+                return {
+                    successo: false,
+                    mensagem: "O Sub-agente não tem faturações!",
+                };
             }
         }
 
@@ -633,16 +859,19 @@ class relatorioService {
                     where(fn("YEAR", col("data_correspondente")), ano),
                     where(fn("MONTH", col("data_correspondente")), mes),
                     where(col("agente_id"), id_agente),
-                    where(col("parcela"), parcela)
-                ]
-            }
+                    where(col("parcela"), parcela),
+                ],
+            },
         });
         if (pagamentoEncontrado) {
-            return { successo: false, mensagem: "O Sub-agente já foi pago neste mês!" }
+            return {
+                successo: false,
+                mensagem: "O Sub-agente já foi pago neste mês!",
+            };
         }
 
         return { successo: true, mensagem: "Pode ser pago!" };
-    }
+    };
 
     /**
      * Buscar os agentes pagos e não pagos de um determinado periodo
@@ -652,7 +881,10 @@ class relatorioService {
      * listaFaturacoes: Object
      * }}}
      */
-    buscarAgentesPagosNaoPagos = async (data) => {
+    buscarAgentesPagosNaoPagos = async (data, forma_pagamento, parcela) => {
+        if (!forma_pagamento) {
+            forma_pagamento = "%%";
+        }
         if (!data) {
             data = new Date();
         }
@@ -666,44 +898,53 @@ class relatorioService {
                 [Op.and]: [
                     where(fn("YEAR", col("data_correspondente")), ano),
                     where(fn("MONTH", col("data_correspondente")), mes),
-                ]
-            }, include: {
+                    where(col("parcela"), {
+                        [Op.like]: parcela,
+                    }),
+                ],
+            },
+            include: {
                 model: models.agentes,
-                as: "agente", attributes: ["nome", "telefone"]
-            }
+                as: "agente",
+                attributes: ["nome", "telefone"],
+            },
         });
 
         const listaFaturacoes = await faturacoes.findAll({
             attributes: [
-                [fn("count", col("agente_id")), "Total"], "agente_id", "forma_pagamento",
-                [col('agente.nome'), 'agente.nome'],
-                [col('agente.telefone'), 'agente.telefone']
+                [fn("count", col("agente_id")), "Total"],
+                "agente_id",
+                "forma_pagamento",
+                [col("agente.nome"), "agente.nome"],
+                [col("agente.telefone"), "agente.telefone"],
             ],
             include: {
                 model: models.agentes,
-                as: "agente", attributes: [],
-                order: [
-                    ["nome", "ASC"]
-                ],
+                as: "agente",
+                attributes: [],
+                order: [["nome", "ASC"]],
             },
             where: {
                 [Op.and]: [
                     where(fn("YEAR", col("data_faturacao")), ano),
                     where(fn("MONTH", col("data_faturacao")), mes),
-                ]
+                    where(col("forma_pagamento"), {
+                        [Op.like]: forma_pagamento,
+                    }),
+                ],
             },
             group: ["agente_id", "forma_pagamento"],
-            order: [[col('agente.nome'), 'ASC']],
+            order: [[col("agente.nome"), "ASC"]],
             raw: true,
-            nest: true
+            nest: true,
         });
 
         const pagamentosAgentesEncontrados = {
             listaAgentesPagos: listaAgentesPagos,
-            listaFaturacoes: listaFaturacoes
-        }
+            listaFaturacoes: listaFaturacoes,
+        };
         return pagamentosAgentesEncontrados;
-    }
+    };
 }
 
 module.exports = relatorioService;

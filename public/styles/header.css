@@ -10,7 +10,6 @@
 }
 
 
-
 header {
     background-color: var(--roxo);
     position: fixed;
@@ -47,7 +46,7 @@ header {
         .menu-navegacao-items {
             display: flex;
             flex-flow: column;
-            gap: 8px;
+            
 
             .menu-navegacao-items-item {
                 overflow: hidden;
@@ -58,6 +57,8 @@ header {
                     align-items: center;
                     padding-left: 10px;
                     gap: 8px;
+
+                    transition: .3s;
 
                     span {
                         cursor: pointer;
@@ -83,6 +84,35 @@ header {
                     background-color: #f0f0f033;
                 }
 
+                .sub-menu-navegacao-items-item-titulo {
+                    display: flex;
+                    flex-flow: column;
+                    
+                    align-items: flex-start;
+                    padding-left: 45px;
+                    height: 0px;
+                    padding-right: 10px;
+
+                    transition: .3s;
+
+                    div {
+                        display: flex;
+                        border-radius: 8px;
+                        align-items: center;
+                        padding: 6px;
+                        width: 100%;
+
+                        transition: .3s;
+                    }
+
+                    div:hover {
+                        background-color: #f0f0f033;
+                    }
+                }
+                .sub-menu-navegacao-items-item-titulo-visival{
+                    height: 80px;
+                }
+
                 #logo {
                     background-color: black;
                     display: inline-block;
@@ -90,14 +120,15 @@ header {
                     width: 24px;
                     height: 20px;
                     text-align: center;
-                    
+
                     border-radius: 50%;
 
                     color: var(--laranja);
                     font-weight: 400;
                     font-size: 1em;
                 }
-                #nome{
+
+                #nome {
                     padding-left: 0;
                 }
 

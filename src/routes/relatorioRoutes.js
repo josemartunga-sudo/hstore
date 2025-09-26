@@ -31,6 +31,20 @@ relatorioRoutes.get(
   relatorioController.buscarRelatorioMensal
 );
 
+/**
+ * @route GET /relatorio/quinzenal
+ * @group Relatório - Operações relacionadas a relatórios
+ * @returns {Object} 200 - Lista de faturas
+ * @returns {Error} 401 - Não autorizado
+ * @description Lista todas as faturas registadas
+ * @access Privado (Autenticado)
+ */
+relatorioRoutes.get(
+  "/quinzenal",
+  autenticacaoMiddleware.verificarAutenticacao,
+  relatorioController.buscarRelatorioQuinzenal
+);
+
 
 /**
  * @route GET /relatorio/mensal

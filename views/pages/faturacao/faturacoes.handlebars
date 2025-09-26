@@ -9,6 +9,23 @@
                     <i class="fas fa-calendar-alt fa-1x" style="color: #F7941E;"></i>
                     </i>
                 </div>
+                <select name="filtro" id="filtro">
+                    {{#if (eq resumoDiario.filtro "Mensal")}}
+                        <option value="Geral">Geral</option>
+                        <option selected value="Mensal">Mensal</option>
+                        <option value="Quinzenal">Quinzenal</option>
+                    {{else}}
+                            {{#if (eq resumoDiario.filtro "Quinzenal")}}
+                            <option value="Geral">Geral</option>
+                            <option value="Mensal">Mensal</option>
+                            <option selected value="Quinzenal">Quinzenal</option>
+                        {{else}}
+                            <option selected value="Geral">Geral</option>
+                            <option value="Mensal">Mensal</option>
+                            <option value="Quinzenal">Quinzenal</option>
+                        {{/if}}
+                    {{/if}}
+                </select>
             </form>
             <div class="main-page-titulo">
             </div>
@@ -30,7 +47,7 @@
             </div>
         </section>
         <h2 class="main-page-lista-cabeçalho">
-            Faturações do dia
+            Faturações {{resumoDiario.filtro}} do dia
             <a href="/agentes?info=true" class="btn-plus">+</a>
         </h2>
     </div>
