@@ -33,12 +33,15 @@ class AgentesController {
             const response = await agenteService.criarAgentes(dados, usuarioId);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
 
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
             console.error("Erro ao criar agente:", error);
+            req.flash("error_msg", "Erro interno no servidor");
             return res.status(500).json({ msg: "Internal server error" });
         }
     };
@@ -159,11 +162,13 @@ class AgentesController {
             const response = await agenteService.actualizarAgente(dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao atualizar agente:", error);
             res.status(500).send("Erro interno no servidor");
         }
@@ -181,12 +186,15 @@ class AgentesController {
             const response = await agenteService.deletarAgente(dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
 
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
             console.error("Erro ao atualizar agente:", error);
+            req.flash("error_msg", "Erro interno no servidor");
             res.status(500).send("Erro interno no servidor");
         }
     };
@@ -315,14 +323,15 @@ class AgentesController {
             const response = await agenteService.mudarFormaPagamento(id_agente);
 
             if (!response.successo) {
-                req.flash("error_msg", response.mensagem);
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            
             req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
             console.error("Erro ao mudar forma de pagamento:", error);
+            req.flash("error_msg", "Erro interno no servidor");
             res.render("pages/error", {
                 titulo: "Internal error",
             });

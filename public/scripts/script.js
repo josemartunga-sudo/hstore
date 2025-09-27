@@ -16,3 +16,14 @@ document.addEventListener('click', (e) => {
     }
 });
 
+
+
+// Animação de alertas
+document.querySelectorAll(".alert").forEach((alert) => {
+  setTimeout(() => {
+    alert.style.animation = "slideOut 0.6s ease forwards";
+    setTimeout(() => alert.remove(), 600); // remove após animação
+  }, 4000); // 4 segundos visível
+});
+
+

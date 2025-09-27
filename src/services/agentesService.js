@@ -274,7 +274,7 @@ class AgentesService {
             // Se não houver facturas no mês atual
             if (!Facturacoes.length) {
                 return {
-                    sucesso: false,
+                    successo: false,
                     mensagem: "O agente ainda não tem facturações este mês.",
                 };
             }
@@ -286,7 +286,7 @@ class AgentesService {
 
             if (todasQuinzenais) {
                 return {
-                    sucesso: false,
+                    successo: false,
                     mensagem: "O agente já é quinzenal.",
                 };
             }
@@ -306,7 +306,7 @@ class AgentesService {
             );
 
             return {
-                sucesso: true,
+                successo: true,
                 mensagem:
                     "Forma de pagamento alterada para Quinzenal com sucesso.",
             };

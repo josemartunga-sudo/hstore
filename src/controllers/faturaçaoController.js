@@ -65,11 +65,14 @@ class FacturacaoController {
             const response = await facturacaoService.criarFaturacao(usuarioId, dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(400).send({ msg: response.mensagem });
             }
 
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao criar facturação:", error);
             res.status(500).send("Erro interno do servidor");
         }
@@ -205,11 +208,13 @@ class FacturacaoController {
             const response = await facturacaoService.actualizarFacturacao(dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao atualizar faturação:", error);
             return res.status(500).json({ msg: response.mensagem });
         }
@@ -226,11 +231,13 @@ class FacturacaoController {
             const response = await facturacaoService.deleteFacturacao(dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao deletar faturação:", error);
             return res.status(500).json({ msg: response.mensagem });
         }
