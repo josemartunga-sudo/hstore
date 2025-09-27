@@ -41,6 +41,7 @@ server.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+
     cookie: {
       secure: false,
     },
@@ -55,6 +56,9 @@ server.use(flash());
 server.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
+  res.locals.info_msg = req.flash("info_msg");
+  res.locals.warning_msg = req.flash("warning_msg");
+
   next();
 });
 

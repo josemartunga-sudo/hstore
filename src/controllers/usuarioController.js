@@ -26,12 +26,14 @@ class UsuarioController {
             // Chama o serviço para criar o usuário
             const response = await usuarioService.criarUsuario(dados);
 
-            if (!response.successo) {
+            if (!response.sucesso) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao criar usuario:", error);
             res.status(500).json({ msg: "Erro interno no servidor!" });
         }
@@ -45,7 +47,7 @@ class UsuarioController {
         try {
             const usuariosActivos = await usuarioService.pegarTodosUsuarios();
 
-            if (!usuariosActivos.successo) {
+            if (!usuariosActivos.sucesso) {
                 return res.render("pages/agente/agentes", {
                     titulo: "Agentes Cadastrados",
                     msg: "Nenhum usuário cadastrado!"
@@ -71,7 +73,7 @@ class UsuarioController {
         try {
             const response = await usuarioService.pegarTodosUsuarios();
 
-            if (!response.successo) {
+            if (!response.sucesso) {
                 return res.status(302).json({ msg: "Nenhum agente cadastrado!" });
             }
 
@@ -142,11 +144,13 @@ class UsuarioController {
             const response = await usuarioService.actualizarUsuario(dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao atualizar agente:", error);
             res.status(500).send("Erro interno no servidor");
         }
@@ -185,13 +189,16 @@ class UsuarioController {
             
             // Chama o serviço
             const response = await usuarioService.actualizarSenha(dados);
-            
+
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
+
+            req.flash("error_msg", "Erro interno no servidor");
             console.error("Erro ao atualizar agente:", error);
             res.status(500).send("Erro interno no servidor");
         }
@@ -207,9 +214,10 @@ class UsuarioController {
             const response = await usuarioService.deleteUsuario(dados);
 
             if (!response.successo) {
+                req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
-
+            req.flash("success_msg", response.mensagem);
             return res.status(200).json({ msg: response.mensagem });
         } catch (error) {
             console.error("Erro ao atualizar agente:", error);
