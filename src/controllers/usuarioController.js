@@ -26,7 +26,7 @@ class UsuarioController {
             // Chama o serviço para criar o usuário
             const response = await usuarioService.criarUsuario(dados);
 
-            if (!response.sucesso) {
+            if (!response.successo) {
                 req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
@@ -47,7 +47,7 @@ class UsuarioController {
         try {
             const usuariosActivos = await usuarioService.pegarTodosUsuarios();
 
-            if (!usuariosActivos.sucesso) {
+            if (!usuariosActivos.successo) {
                 return res.render("pages/agente/agentes", {
                     titulo: "Agentes Cadastrados",
                     msg: "Nenhum usuário cadastrado!"
@@ -73,7 +73,7 @@ class UsuarioController {
         try {
             const response = await usuarioService.pegarTodosUsuarios();
 
-            if (!response.sucesso) {
+            if (!response.successo) {
                 return res.status(302).json({ msg: "Nenhum agente cadastrado!" });
             }
 
