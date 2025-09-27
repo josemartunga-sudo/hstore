@@ -323,7 +323,7 @@ class AgentesController {
             const response = await agenteService.mudarFormaPagamento(id_agente);
 
             if (!response.successo) {
-                req.flash("warning_msg", response.mensagem);
+                //req.flash("warning_msg", response.mensagem);
                 return res.status(302).json({ msg: response.mensagem });
             }
             
