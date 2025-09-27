@@ -15,15 +15,16 @@
                         <a href="/agentes/editar/{{agente.id_agente}}">Editar perfil</a>
                     </li>
 
-                     <li>
+                    <form class="formMudarFormaPagamento">
                         <i class="fa-solid fa-arrows-rotate" style="color: #4B1E78;"></i>
-                        <a href="/agentes/forma/pagamento/alterar/{{agente.id_agente}}">Mudar forma de pagamento</a>
-                    </li>
+                        <input style="display: none;" type="text" name="id_agente" id="id_agente" value="{{agente.id_agente}}">
+                        <button type="submit" style="color: #4B1E78;">Mudar forma de pagamento</button>
+                    </form>
 
                     <form class="formDeleteAgente">
                         <i class="fas fa-trash" style="color: #dd080f;"></i>
                         <input style="display: none;" type="text" name="id_agente" id="id_agente" value="{{agente.id_agente}}">
-                        <button type="submit"> Excluir perfil</button>
+                        <button type="submit">Excluir perfil</button>
                     </form>
                 </ul>
             </div>

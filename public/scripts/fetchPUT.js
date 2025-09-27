@@ -23,7 +23,9 @@ if (formEditUsuario) {
     });
 }
 
-const formEditSenhaUsuario = document.querySelector(".main-page-form-edit-usuario-senha");
+const formEditSenhaUsuario = document.querySelector(
+    ".main-page-form-edit-usuario-senha"
+);
 if (formEditSenhaUsuario) {
     formEditSenhaUsuario.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -70,7 +72,9 @@ if (formEditAgente) {
     });
 }
 
-const formEditFaturacao = document.querySelector(".main-page-form-edit-faturacao");
+const formEditFaturacao = document.querySelector(
+    ".main-page-form-edit-faturacao"
+);
 if (formEditFaturacao) {
     formEditFaturacao.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -82,6 +86,29 @@ if (formEditFaturacao) {
             bodyForm,
             `/faturacao/${bodyForm.id_facturacao}`
         );
+    });
+}
+
+const formMudarFormaPagamento = document.querySelector(
+    ".formMudarFormaPagamento"
+);
+if (formMudarFormaPagamento) {
+    formMudarFormaPagamento.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formDate = new FormData(formMudarFormaPagamento);
+        const bodyForm = Object.fromEntries(formDate.entries());
+        if (
+            confirm(
+                `Tem a certeza que deseja alterar a forma de pagamento? Esta ação não pode ser desfeita!`
+            )
+        ) {
+            fetchPut(
+                "/agentes/mudarformapagamento",
+                bodyForm,
+                `/agentes/perfil/${bodyForm.id_agente}`
+            );
+        }
     });
 }
 

@@ -112,12 +112,11 @@ agenteRoutes.get(
 
 
 /**
- * @route   GET /agentes//:id"
- * @desc    Listar todas as vendas de um agente
+ * @route   PUT /alterarfaturacoes"
  * @acesso  Autenticado
  */
-agenteRoutes.get(
-  "/forma/pagamento/alterar/:id",
+agenteRoutes.put(
+  "/mudarformapagamento",
   agentesController.mudarFormaPagamento
 );
 
